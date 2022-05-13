@@ -1,0 +1,123 @@
+{
+  "version": "0.1.0",
+  "name": "pubsub_smartcontract",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [],
+      "args": []
+    },
+    {
+      "name": "createEvent",
+      "accounts": [
+        {
+          "name": "event",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "author",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "hashtag",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateEvent",
+      "accounts": [
+        {
+          "name": "event",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "author",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "hashtag",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "deleteEvent",
+      "accounts": [
+        {
+          "name": "event",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "author",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Event",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "author",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "hashtag",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "HashTagTooLong",
+      "msg": "The provided hashtag should be 50 characters long maximum."
+    },
+    {
+      "code": 6001,
+      "name": "ContentTooLong",
+      "msg": "The provided content should be 300 characters long maximum."
+    }
+  ],
+  "metadata": {
+    "address": "AG3tNC1LRV6L4hCR3iixFT7Y5oUTJeHzjvp533Du8X7t"
+  }
+}
