@@ -8,7 +8,7 @@
       "args": []
     },
     {
-      "name": "createEvent",
+      "name": "publish",
       "accounts": [
         {
           "name": "event",
@@ -38,45 +38,35 @@
       ]
     },
     {
-      "name": "updateEvent",
+      "name": "notify",
       "accounts": [
         {
-          "name": "event",
+          "name": "notification",
           "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "notifier",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "event",
+          "isMut": false,
           "isSigner": false
         },
         {
-          "name": "author",
+          "name": "systemProgram",
           "isMut": false,
-          "isSigner": true
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "hashtag",
-          "type": "string"
-        },
-        {
-          "name": "content",
+          "name": "proof",
           "type": "string"
         }
       ]
-    },
-    {
-      "name": "deleteEvent",
-      "accounts": [
-        {
-          "name": "event",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "author",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
@@ -103,6 +93,30 @@
           }
         ]
       }
+    },
+    {
+      "name": "Notification",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "notifier",
+            "type": "publicKey"
+          },
+          {
+            "name": "eventKey",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "proof",
+            "type": "string"
+          }
+        ]
+      }
     }
   ],
   "errors": [
@@ -115,6 +129,16 @@
       "code": 6001,
       "name": "ContentTooLong",
       "msg": "The provided content should be 300 characters long maximum."
+    },
+    {
+      "code": 6002,
+      "name": "ProofTooLong",
+      "msg": "The provided proof should be 300 characters long maximum."
+    },
+    {
+      "code": 6003,
+      "name": "EventExpired",
+      "msg": "This event expired"
     }
   ],
   "metadata": {

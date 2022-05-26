@@ -6,7 +6,7 @@ export const sendTweet = async (topic, content) => {
     const { wallet, program } = useWorkspace()
     const event = web3.Keypair.generate()
 
-    await program.value.rpc.createEvent(topic, content, {
+    await program.value.rpc.publish(topic, content, {
         accounts: {
             author: wallet.value.publicKey,
             event: event.publicKey,
