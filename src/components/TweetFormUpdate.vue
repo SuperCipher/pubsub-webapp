@@ -29,7 +29,7 @@ const characterLimitColour = computed(() => {
 
 // Permissions.
 const { connected } = useWallet()
-const canTweet = computed(() => content.value && characterLimit.value > 0)
+const canTweet = computed(() => content.value && characterLimit.value >= 0)
 
 // Actions.
 const emit = defineEmits(['close'])
@@ -56,7 +56,7 @@ const update = async () => {
                     </router-link>
                 </time>
             </div>
-            
+
             <!-- Content field. -->
             <textarea
                 ref="textarea"
