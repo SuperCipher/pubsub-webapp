@@ -1,8 +1,9 @@
 <script setup>
-import { ref, toRefs, computed } from 'vue'
+import { ref, toRefs, computed, watchEffect } from 'vue'
 import { useWorkspace,useCountCharacterLimit } from '@/composables'
 import { useWallet } from 'solana-wallets-vue'
-import { notify } from '@/api'
+import { notify, getNotification } from '@/api'
+import NotiCard from '@/components/NotiCard'
 
 const props = defineProps({
     tweet: Object,
@@ -22,10 +23,23 @@ const authorRoute = computed(() => {
 const characterLimit = useCountCharacterLimit(proof, 280)
 
 const canNotify = computed(() => proof.value && characterLimit.value >= 0)
+const notifications = ref([])
+
+watchEffect(async () => {
+
+  try {
+      const allNotification = await getNotification(tweet.value.key)
+      notifications.value.push(...allNotification)
+  } catch (e) {
+  console.log('E', e)
+
+  }
+
+})
 
 
 // Actions.
-const emit = defineEmits(['notified'])
+// const emit = defineEmits(['notified'])
 const notifySequence = async () => {
     if (! canNotify.value) return
     console.log("proof.value",proof.value)
@@ -33,7 +47,9 @@ const notifySequence = async () => {
     console.log("tweet.key",tweet.value.key)
 
     const notification = await notify( proof.value, tweet.value.key)
-    emit('notified', notification)
+    console.log('NOTIFICATION', notification)
+    // addNoti(notification)
+    // emit('notified', notification)
     proof.value = ''
 }
 
@@ -62,7 +78,7 @@ const { connected } = useWallet()
             </div>
             <div class="flex" v-if="isMyTweet">
                 <button @click="isEditing = true" class="flex px-2 rounded-full text-gray-500 hover:text-pink-500 hover:bg-gray-100" title="Update tweet">
-                  Subscript
+                  Subscribe
                 </button>
             </div>
         </div>
@@ -71,8 +87,14 @@ const { connected } = useWallet()
             #{{ tweet.topic }}
         </router-link>
 
-        <!-- Notification -->
-        <div v-if="!isMyTweet" class="px-8 py-4 border-b">
+        <!-- Notification List -->
+        <div class="divide-y">
+            <noti-card v-for="noti in notifications" :key="noti.key" :noti="noti"></noti-card>
+        </div>
+
+
+        <!-- Notification Form -->
+        <div v-if="!isMyTweet" class="px-8 py-4">
 
             <div class="flex flex-wrap items-center justify-between -m-2">
 
